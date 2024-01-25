@@ -2,6 +2,6 @@ version: '3.9'
 
 services:
   web:
-    image: "aakashgoel2002/node-ToDo-app:latest"
+    image: "aakashgoel2002/node-todo-app:latest"
     ports:
       - "8000:8000"
