@@ -23,7 +23,7 @@ pipeline{
 		stage("Push Image"){
 			steps{
 				withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-					sh "docker tag node-todo-app ${env.dockerHubUser}/node-to-do-app"
+					sh "docker tag node-todo-app ${env.dockerHubUser}/node-todo-app"
 					sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
 					sh "echo Docker Login Success"
 					sh "docker push ${env.dockerHubUser}/node-todo-app:latest"
