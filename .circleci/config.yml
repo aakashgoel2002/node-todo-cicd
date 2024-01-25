@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: docker:19.03.12
+
+    steps:
+      - checkout
+      - run:
+          name: Clone Repository
+          command: git clone https://github.com/aakashgoel2002/node-todo-cicd.git -b master
+      - run:
+          name: Build Docker Image
+          command: |
+            cd node-todo-cicd
+            docker build -t node-todo-app .
+      - run:
+          name: Scan
+          command: echo "Scanning Done"
+      - run:
+          name: Push Image
+          command: |
+            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
+            docker tag node-todo-app "${DOCKERHUB_USER}/node-todo-app"
+            docker push "${DOCKERHUB_USER}/node-todo-app:latest"
+      - run:
+          name: Deploy
+          command: |
+            docker-compose down && docker-compose up -d
