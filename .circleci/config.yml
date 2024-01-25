@@ -1,30 +1,31 @@
 version: 2.1
-
 jobs:
-  build:
+  build_and_deploy:
     docker:
-      - image: docker:19.03.12
-
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
-          name: Clone Repository
-          command: git clone https://github.com/aakashgoel2002/node-todo-cicd.git -b master
+          name: Clone code
+          command: git clone https://github.com/aakashgoel2002/node-todo-cicd.git
       - run:
-          name: Build Docker Image
+          name: Build image
+          command: docker build -t node-todo-app .
+      - run:
+          name: Scan image
+          command: echo Scanning Done  # Replace with actual scanning commands
+      - run:
+          name: Push image
           command: |
-            cd node-todo-cicd
-            docker build -t node-todo-app .
-      - run:
-          name: Scan
-          command: echo "Scanning Done"
-      - run:
-          name: Push Image
-          command: |
-            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USER}" --password-stdin
-            docker tag node-todo-app "${DOCKERHUB_USER}/node-todo-app"
-            docker push "${DOCKERHUB_USER}/node-todo-app:latest"
+            docker tag node-todo-app ${DOCKERHUB_USER}/node-todo-app
+            docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
+            docker push ${DOCKERHUB_USER}/node-todo-app:latest
       - run:
           name: Deploy
-          command: |
-            docker-compose down && docker-compose up -d
+          command: docker-compose down && docker-compose up -d
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_and_deploy
