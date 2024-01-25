@@ -11,7 +11,7 @@ pipeline{
 		}
 		stage("Build"){
 			steps{
-				sh "docker build -t node-ToDo-app ."
+				sh "docker build -t node-todo-app ."
 				sh "echo Build Done"
 			}
 		}
@@ -25,7 +25,7 @@ pipeline{
 				withCredential([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
 					sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
 					sh "echo Docker Login Success"
-					sh "docker push ${env.dockerHubUser}/node-ToDo-app:latest"
+					sh "docker push ${env.dockerHubUser}/node-todo-app:latest"
 					sh "echo Docker Push Done"
 				}
 			}
