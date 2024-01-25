@@ -11,7 +11,7 @@ pipeline{
 		}
 		stage("Build"){
 			steps{
-				docker build -t node-ToDo-app .
+				sh "docker build -t node-ToDo-app ."
 				sh "echo Build Done"
 			}
 		}
